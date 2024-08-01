@@ -1,10 +1,11 @@
 <script lang="ts">
+	import * as Form from '$lib/components/ui/form/index';
 	import * as Card from '$lib/components/ui/card/index';
-	import { Input } from '$lib/components/ui/input/index';
 	import * as Select from '$lib/components/ui/select/index';
+	import { Input } from '$lib/components/ui/input/index';
+
 	import { superForm } from 'sveltekit-superforms';
 	import type { PageServerData } from '../$types';
-	import * as Form from '$lib/components/ui/form/index';
 
 	export let data: PageServerData;
 

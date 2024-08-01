@@ -1,8 +1,15 @@
 <script lang="ts">
+	import * as Form from '$lib/components/ui/form/index';
 	import * as Card from '$lib/components/ui/card/index';
-	import { Button } from '$lib/components/ui/button/index';
 	import { Input } from '$lib/components/ui/input/index';
-	import { Label } from '$lib/components/ui/label/index';
+
+	import { superForm } from 'sveltekit-superforms';
+	import type { PageServerData } from '../$types';
+
+	export let data: PageServerData;
+
+	const form = superForm(data.form);
+	const { form: formData, enhance } = form;
 </script>
 
 <main class="flex min-h-screen items-center">
@@ -12,26 +19,40 @@
 			<Card.Description>Enter your email below to login to your account</Card.Description>
 		</Card.Header>
 		<Card.Content>
-			<div class="grid gap-4">
-				<div class="grid gap-2">
-					<Label for="email">Email</Label>
-					<Input id="email" type="email" placeholder="example@example.com" required />
+			<form method="post" use:enhance>
+				<div class="grid gap-4">
+					<Form.Field {form} name="email" class="grid gap-2">
+						<Form.Control let:attrs>
+							<Form.Label>Email</Form.Label>
+							<Input
+								{...attrs}
+								type="email"
+								placeholder="example@example.com"
+								required
+								bind:value={$formData.email}
+							/>
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+					<Form.Field {form} name="password" class="grid gap-2">
+						<Form.Control let:attrs>
+							<div class="flex items-center">
+								<Form.Label>Password</Form.Label>
+								<a href="/nowhere" class="ml-auto inline-block text-sm underline">
+									Forgot your password?
+								</a>
+							</div>
+							<Input {...attrs} type="password" required bind:value={$formData.password} />
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+					<Form.Button type="submit" class="w-full">Login</Form.Button>
 				</div>
-				<div class="grid gap-2">
-					<div class="flex items-center">
-						<Label for="password">Password</Label>
-						<a href="/nowhere" class="ml-auto inline-block text-sm underline">
-							Forgot your password?
-						</a>
-					</div>
-					<Input id="password" type="password" required />
+				<div class="mt-4 text-center text-sm">
+					Don't have an account?
+					<a href="/register" class="underline">Sign up</a>
 				</div>
-				<Button type="submit" class="w-full">Login</Button>
-			</div>
-			<div class="mt-4 text-center text-sm">
-				Don't have an account?
-				<a href="/register" class="underline">Sign up</a>
-			</div>
+			</form>
 		</Card.Content>
 	</Card.Root>
 </main>
