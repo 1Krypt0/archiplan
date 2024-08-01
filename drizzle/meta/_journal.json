@@ -15,6 +15,27 @@
       "when": 1722290169115,
       "tag": "20240729215609_add_transactions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1722442513941,
+      "tag": "20240731161513_remove_identity",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1722505185780,
+      "tag": "20240801093945_remove_references",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1722505270513,
+      "tag": "20240801094110_add_references_again",
+      "breakpoints": true
     }
   ]
 }

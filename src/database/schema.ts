@@ -57,7 +57,7 @@ export const projectStageEnum = pgEnum('project_stage', [
 export const projectCouncilTypeEnum = pgEnum('project_type', ['rustic', 'urban']);
 
 export const userTable = pgTable('user', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
+	id: text('id').primaryKey().unique(),
 	name: text('name').notNull(),
 	email: text('email').notNull().unique(),
 	password: text('password').notNull(),
@@ -66,8 +66,8 @@ export const userTable = pgTable('user', {
 });
 
 export const sessionTable = pgTable('session', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
-	userID: integer('user_id')
+	id: text('id').primaryKey().unique(),
+	userId: text('user_id')
 		.notNull()
 		.references(() => userTable.id),
 	expiresAt: timestamp('expires_at', {
@@ -77,7 +77,7 @@ export const sessionTable = pgTable('session', {
 });
 
 export const clientTable = pgTable('client', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
+	id: text('id').primaryKey().unique(),
 	type: clientTypeEnum('client_type').notNull(),
 	name: text('name').notNull(),
 	address: text('address').notNull(),
@@ -87,11 +87,11 @@ export const clientTable = pgTable('client', {
 	citizenIDExpirationDate: date('citizes_expiration_date').notNull(),
 	taxID: integer('tax_id').notNull().unique(), // NOTE: Check if actually an int in every country (billing is tricky)
 	civilState: civilStateEnum('civil_state').notNull(),
-	procurerID: integer('procurer_id').references(() => procurerTable.id)
+	procurerID: text('procurer_id').references(() => procurerTable.id)
 });
 
 export const projectTable = pgTable('project', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
+	id: text('id').primaryKey().unique(),
 	address: text('address').notNull(),
 	type: projectTypeEnum('type').notNull(),
 	expectedHours: integer('expected_hours').notNull(),
@@ -103,7 +103,7 @@ export const projectTable = pgTable('project', {
 	projectArea: real('project_area').notNull(),
 	topographyArea: real('topography_area').notNull(),
 	conservatoryAccessCode: text('conservatory_access_code'),
-	clientID: integer('id')
+	clientID: text('id')
 		.references(() => clientTable.id, { onDelete: 'cascade' })
 		.notNull()
 });
@@ -111,10 +111,10 @@ export const projectTable = pgTable('project', {
 export const projectUserTable = pgTable(
 	'project_user',
 	{
-		projectID: integer('project_id')
+		projectID: text('project_id')
 			.notNull()
 			.references(() => projectTable.id),
-		clientID: integer('client_id')
+		clientID: text('client_id')
 			.notNull()
 			.references(() => clientTable.id)
 	},
@@ -126,7 +126,7 @@ export const projectUserTable = pgTable(
 );
 
 export const procurerTable = pgTable('procurer', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
+	id: text('id').primaryKey().unique(),
 	name: text('name').notNull(),
 	address: text('address').notNull(),
 	taxID: integer('tax_id').notNull().unique(),
@@ -137,25 +137,25 @@ export const procurerTable = pgTable('procurer', {
 });
 
 export const moneyTransaction = pgTable('money_transaction', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
+	id: text('id').primaryKey().unique(),
 	amount: real('amount').notNull(),
 	description: text('description').notNull(),
-	projectID: integer('project_id')
+	projectID: text('project_id')
 		.notNull()
 		.references(() => projectTable.id),
-	userID: integer('user_id')
+	userID: text('user_id')
 		.notNull()
 		.references(() => userTable.id)
 });
 
 export const timeTransaction = pgTable('time_transaction', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity({ startWith: 1 }).unique(),
+	id: text('id').primaryKey().unique(),
 	amount: real('amount').notNull(),
 	description: text('description').notNull(),
-	projectID: integer('project_id')
+	projectID: text('project_id')
 		.notNull()
 		.references(() => projectTable.id),
-	userID: integer('user_id')
+	userID: text('user_id')
 		.notNull()
 		.references(() => userTable.id)
 });
