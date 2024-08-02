@@ -26,20 +26,11 @@ export const civilStateEnum = pgEnum('civil_state', [
 	'single',
 	'married',
 	'divorced',
-	'widowed' // NOTE: Maybe not a civil state, idk really
+	'separated',
+	'widowed'
 ]);
 
-// NOTE: Whenever a new type emerges, add it here first
-export const projectTypeEnum = pgEnum('project_type', [
-	'new_terrain',
-	'terrain_change',
-	'single_family_housing',
-	'multi_family_housing',
-	'warehouse',
-	'industry',
-	'garage'
-]);
-
+// TODO: Redefine and maybe simplify with father
 export const projectStageEnum = pgEnum('project_stage', [
 	'contract_signature_tentative_study',
 	'tentative_study_presentation',
@@ -54,7 +45,7 @@ export const projectStageEnum = pgEnum('project_stage', [
 	'final_works'
 ]);
 
-export const projectCouncilTypeEnum = pgEnum('project_type', ['rustic', 'urban']);
+export const projectCouncilTypeEnum = pgEnum('project_council_location', ['rustic', 'urban']);
 
 export const userTable = pgTable('user', {
 	id: text('id').primaryKey().unique(),
@@ -93,7 +84,9 @@ export const clientTable = pgTable('client', {
 export const projectTable = pgTable('project', {
 	id: text('id').primaryKey().unique(),
 	address: text('address').notNull(),
-	type: projectTypeEnum('type').notNull(),
+	typeID: text('type_id')
+		.notNull()
+		.references(() => projectTypeTable.id),
 	expectedHours: integer('expected_hours').notNull(),
 	stage: projectStageEnum('stage').notNull(),
 	councilType: projectCouncilTypeEnum('council_type').notNull(),
@@ -103,9 +96,14 @@ export const projectTable = pgTable('project', {
 	projectArea: real('project_area').notNull(),
 	topographyArea: real('topography_area').notNull(),
 	conservatoryAccessCode: text('conservatory_access_code'),
-	clientID: text('id')
+	clientID: text('client_id')
 		.references(() => clientTable.id, { onDelete: 'cascade' })
 		.notNull()
+});
+
+export const projectTypeTable = pgTable('project_type', {
+	id: text('id').primaryKey().unique(),
+	type: text('type').notNull().unique()
 });
 
 export const projectUserTable = pgTable(

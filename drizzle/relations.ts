@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { procurer, client, project, user, session, moneyTransaction, timeTransaction, projectUser } from "./schema";
+import { procurer, client, project, projectType, moneyTransaction, user, session, timeTransaction, projectUser } from "./schema";
 
 export const clientRelations = relations(client, ({one, many}) => ({
 	procurer: one(procurer, {
@@ -16,25 +16,20 @@ export const procurerRelations = relations(procurer, ({many}) => ({
 
 export const projectRelations = relations(project, ({one, many}) => ({
 	client: one(client, {
-		fields: [project.id],
+		fields: [project.clientId],
 		references: [client.id]
+	}),
+	projectType: one(projectType, {
+		fields: [project.typeId],
+		references: [projectType.id]
 	}),
 	moneyTransactions: many(moneyTransaction),
 	timeTransactions: many(timeTransaction),
 	projectUsers: many(projectUser),
 }));
 
-export const sessionRelations = relations(session, ({one}) => ({
-	user: one(user, {
-		fields: [session.userId],
-		references: [user.id]
-	}),
-}));
-
-export const userRelations = relations(user, ({many}) => ({
-	sessions: many(session),
-	moneyTransactions: many(moneyTransaction),
-	timeTransactions: many(timeTransaction),
+export const projectTypeRelations = relations(projectType, ({many}) => ({
+	projects: many(project),
 }));
 
 export const moneyTransactionRelations = relations(moneyTransaction, ({one}) => ({
@@ -44,6 +39,19 @@ export const moneyTransactionRelations = relations(moneyTransaction, ({one}) => 
 	}),
 	user: one(user, {
 		fields: [moneyTransaction.userId],
+		references: [user.id]
+	}),
+}));
+
+export const userRelations = relations(user, ({many}) => ({
+	moneyTransactions: many(moneyTransaction),
+	sessions: many(session),
+	timeTransactions: many(timeTransaction),
+}));
+
+export const sessionRelations = relations(session, ({one}) => ({
+	user: one(user, {
+		fields: [session.userId],
 		references: [user.id]
 	}),
 }));
@@ -60,12 +68,12 @@ export const timeTransactionRelations = relations(timeTransaction, ({one}) => ({
 }));
 
 export const projectUserRelations = relations(projectUser, ({one}) => ({
-	project: one(project, {
-		fields: [projectUser.projectId],
-		references: [project.id]
-	}),
 	client: one(client, {
 		fields: [projectUser.clientId],
 		references: [client.id]
+	}),
+	project: one(project, {
+		fields: [projectUser.projectId],
+		references: [project.id]
 	}),
 }));
