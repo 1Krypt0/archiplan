@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input/index';
 
 	import { superForm } from 'sveltekit-superforms';
-	import type { PageServerData } from '../$types';
+	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
 

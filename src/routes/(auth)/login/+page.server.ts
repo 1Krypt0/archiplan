@@ -5,8 +5,8 @@ import { zod } from 'sveltekit-superforms/adapters';
 import { lucia } from '$lib/server/auth';
 import { verify } from '@node-rs/argon2';
 
-import db from '../../database/drizzle';
-import { userTable } from '../../database/schema';
+import db from '../../../database/drizzle';
+import { userTable } from '../../../database/schema';
 import { eq } from 'drizzle-orm';
 
 import { fail, redirect } from '@sveltejs/kit';
