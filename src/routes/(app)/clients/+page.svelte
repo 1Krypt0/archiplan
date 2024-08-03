@@ -3,10 +3,10 @@
 
 	export let data: PageServerData;
 
-	const userId = data.userId;
+	const user = data.user;
 </script>
 
-<main>Hello, user with ID {userId}</main>
+<main>Hello, user with ID {user?.id} and name {user?.name} and email {user?.email}</main>
 
 <form action="/logout" method="post">
 	<button type="submit">Logout</button>
