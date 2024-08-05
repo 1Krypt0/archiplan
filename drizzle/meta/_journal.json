@@ -1,40 +1,12 @@
 {
   "version": "7",
-  "dialect": "postgresql",
+  "dialect": "sqlite",
   "entries": [
     {
       "idx": 0,
-      "version": "7",
-      "when": 1722289870600,
-      "tag": "20240729215110_starter",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1722290169115,
-      "tag": "20240729215609_add_transactions",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1722442513941,
-      "tag": "20240731161513_remove_identity",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1722505185780,
-      "tag": "20240801093945_remove_references",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1722505270513,
-      "tag": "20240801094110_add_references_again",
+      "version": "6",
+      "when": 1722856945974,
+      "tag": "20240805112225_turso_migration",
       "breakpoints": true
     }
   ]
