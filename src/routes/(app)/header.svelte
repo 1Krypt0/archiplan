@@ -8,7 +8,9 @@
 </script>
 
 <header class="flex min-h-10 items-center justify-between border-b border-b-black px-12 py-7">
-	<img src={logo} alt="Company Logo" class="h-10 object-contain" />
+	<a href="/">
+		<img src={logo} alt="Company Logo" class="h-10 object-contain" />
+	</a>
 	<form class="w-1/3">
 		<div class="relative">
 			<Search class="absolute left-2 top-[50%] h-4 w-4 translate-y-[-50%] text-muted-foreground" />
@@ -35,7 +37,11 @@
 					<DropdownMenu.Item>Settings</DropdownMenu.Item>
 				</DropdownMenu.Group>
 				<DropdownMenu.Separator />
-				<DropdownMenu.Item>Logout</DropdownMenu.Item>
+				<DropdownMenu.Item>
+					<form action="/logout" method="post">
+						<button type="submit">Logout</button>
+					</form>
+				</DropdownMenu.Item>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 		<Bell class="h-6 w-6" />
