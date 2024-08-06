@@ -7,7 +7,7 @@
 	<Header />
 	<main class="flex flex-1 px-12">
 		<Sidebar />
-		<section>
+		<section class="w-full">
 			<slot />
 		</section>
 	</main>

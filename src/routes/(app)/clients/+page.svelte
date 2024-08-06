@@ -1,13 +1,11 @@
 <script lang="ts">
-	import type { PageServerData } from './$types';
-
-	export let data: PageServerData;
-
-	const user = data.user;
+	import ClientTable from './client-table.svelte';
 </script>
 
-<main>Hello, user with ID {user?.id} and name {user?.name} and email {user?.email}</main>
+<main class="px-20 py-14">
+	<h1 class="text-5xl font-extrabold">Client Management</h1>
 
-<form action="/logout" method="post">
-	<button type="submit">Logout</button>
-</form>
+	<section class="flex justify-center pt-14">
+		<ClientTable />
+	</section>
+</main>
