@@ -2,7 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { generateIdFromEntropySize } from 'lucia';
 import { z } from 'zod';
-import { superValidate } from 'sveltekit-superforms';
+import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { hash } from '@node-rs/argon2';
 import db from '../../../database/drizzle';
@@ -11,10 +11,10 @@ import { lucia } from '$lib/server/auth';
 import { eq } from 'drizzle-orm';
 
 const formSchema = z.object({
-	firstName: z.string(),
-	lastName: z.string(),
+	firstName: z.string().min(1),
+	lastName: z.string().min(1),
 	email: z.string().email(),
-	password: z.string(),
+	password: z.string().min(1),
 	department: z.enum(['architecture', 'interior_design'])
 });
 
@@ -31,12 +31,13 @@ export const actions = {
 		const form = await superValidate(request, zod(formSchema));
 
 		if (!form.valid) {
-			return fail(400, { form, incorrect: true, message: 'Invalid registration data' });
+			return fail(400, { form });
 		}
 
 		const data = form.data;
 
 		const email = data.email;
+
 		// 32 character ID (128 bits)
 		const emailID = generateIdFromEntropySize(20);
 		const name = `${data.firstName} ${data.lastName}`;
@@ -56,7 +57,7 @@ export const actions = {
 			.where(eq(userTable.email, email));
 
 		if (alreadyExists.length !== 0) {
-			return fail(400, { form, alreadyExists: true, message: 'Email already in use' });
+			return setError(form, 'email', 'Email already in use.');
 		}
 
 		await db.insert(userTable).values({

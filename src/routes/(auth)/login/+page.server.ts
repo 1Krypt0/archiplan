@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { superValidate } from 'sveltekit-superforms';
+import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 
 import { lucia } from '$lib/server/auth';
@@ -38,10 +38,10 @@ export const actions: Actions = {
 
 		// No user exists
 		if (user.length === 0) {
-			// Compare against dummy password to protect against side-channels
-			await verify('ashdfnth', password);
+			// TODO:  Compare against dummy password to protect against side-channels
 
-			return fail(400, { form, incorrect: true, message: 'Incorrect email or password' });
+			setError(form, 'password', 'Incorrect email or password');
+			return setError(form, 'email', 'Incorrect email or password');
 		}
 
 		const validPassword = await verify(user[0].password, password, {

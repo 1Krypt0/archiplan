@@ -16,11 +16,14 @@
 		},
 		{
 			value: 'interior_design',
-			label: 'Interior Designer'
+			label: 'Interior Design'
 		}
 	];
 
-	const form = superForm(data.form);
+	const form = superForm(data.form, {
+		taintedMessage:
+			'Are you sure you want to leave? You have not completed the registration process. All information will be lost.'
+	});
 	const { form: formData, enhance } = form;
 </script>
 
