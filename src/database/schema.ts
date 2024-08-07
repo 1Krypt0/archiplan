@@ -57,6 +57,9 @@ export const userTable = sqliteTable('user', {
 	isAdmin: integer('is_admin', { mode: 'boolean' }).default(false).notNull()
 });
 
+export type SelectUser = typeof userTable.$inferSelect;
+export type InsertUser = typeof userTable.$inferInsert;
+
 // export const sessionTable = pgTable('session', {
 // 	id: text('id').primaryKey().unique(),
 // 	userId: text('user_id')
@@ -92,19 +95,20 @@ export const sessionTable = sqliteTable('session', {
 
 export const clientTable = sqliteTable('client', {
 	id: text('id').primaryKey().unique(),
-	type: text('client_type', { enum: ['customer', 'business', 'government'] }).notNull(),
+	type: text('client_type', { enum: ['Customer', 'Business', 'Government'] }).notNull(),
 	name: text('name').notNull(),
 	address: text('address').notNull(),
 	email: text('email').notNull().unique(),
 	phoneNumber: text('phone_number'), // NOTE: Maybe make it not null, if relevant
-	citizenId: integer('citizen_id').notNull().unique(),
-	citizenIdExpirationDate: integer('id', { mode: 'timestamp' }).notNull(),
+	citizenId: integer('citizen_id').unique(),
+	citizenIdExpirationDate: integer('citizen_id_expiration_date', { mode: 'timestamp' }),
 	taxId: integer('tax_id').notNull().unique(), // NOTE: Check if actually an int in every country (billing is tricky)
 	civilState: text('civil_state', {
-		enum: ['single', 'married', 'divorced', 'separated', 'widowed']
-	}).notNull(),
+		enum: ['Single', 'Married', 'Divorced', 'Separated', 'Widowed']
+	}),
 	procurerId: text('procurer_id').references(() => procurerTable.id)
 });
+
 
 // export const projectTable = pgTable('project', {
 // 	id: text('id').primaryKey().unique(),
@@ -161,6 +165,9 @@ export const projectTable = sqliteTable('project', {
 		.references(() => clientTable.id, { onDelete: 'cascade' })
 		.notNull()
 });
+
+export type projectSelect = typeof projectTable.$inferSelect;
+export type projectInsert = typeof projectTable.$inferInsert;
 
 // export const projectTypeTable = pgTable('project_type', {
 // 	id: text('id').primaryKey().unique(),

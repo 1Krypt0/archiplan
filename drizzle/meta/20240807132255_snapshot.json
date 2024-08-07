@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "4d7939af-0d3e-4b08-8ae9-beb8f05a890d",
+  "id": "0fdc0a52-14fa-4a85-88a5-46e2bb7518b0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "client": {
@@ -9,8 +9,8 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
-          "primaryKey": false,
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
           "autoincrement": false
         },
@@ -53,7 +53,14 @@
           "name": "citizen_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "citizen_id_expiration_date": {
+          "name": "citizen_id_expiration_date",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "tax_id": {
@@ -67,7 +74,7 @@
           "name": "civil_state",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "procurer_id": {

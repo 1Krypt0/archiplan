@@ -5,8 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1722856945974,
-      "tag": "20240805112225_turso_migration",
+      "when": 1723036975211,
+      "tag": "20240807132255_reset_tables",
       "breakpoints": true
     }
   ]
