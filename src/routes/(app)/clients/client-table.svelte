@@ -5,39 +5,12 @@
 	import * as Table from '$lib/components/ui/table';
 	import { Button } from '$lib/components/ui/button';
 	import ClientTableActions from './client-table-actions.svelte';
+	import CreateClient from './create-client.svelte';
 
-	type Client = {
-		id: string;
-		type: 'Customer' | 'Business' | 'Goverment';
-		name: string;
-		address: string;
-		email: string;
-		phoneNumber: string;
-		// NOTE: If he has a procurer looking for him instead, it is a good idea to have him here
-		procurerName?: string;
-	};
+	export let clients;
+	export let form;
 
-	const data: Client[] = [
-		{
-			id: 'nthaoeu',
-			type: 'Customer',
-			name: 'Daniela Cruz',
-			address: 'Travessa de Regadios 48',
-			email: 'danielacruz2001@gmail.com',
-			phoneNumber: '+351938551927'
-		},
-		{
-			id: 'nthaaoeu',
-			type: 'Business',
-			name: 'ONN',
-			address: 'Endereco da ONN em Barcelos Arcozelo',
-			email: 'geral@onn.pt',
-			phoneNumber: '+351 936 180 299',
-			procurerName: 'Jorge Barreto'
-		}
-	];
-
-	const table = createTable(readable(data), {
+	const table = createTable(readable(clients), {
 		page: addPagination()
 	});
 
@@ -84,6 +57,7 @@
 </script>
 
 <div class="">
+	<CreateClient formSchema={form} />
 	<div class="rounded-md border">
 		<Table.Root {...$tableAttrs}>
 			<Table.Header>

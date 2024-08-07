@@ -45,6 +45,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@internationalized/date": "^3.5.5",
     "@libsql/client": "^0.8.1",
     "@lucia-auth/adapter-drizzle": "^1.0.4",
     "@neondatabase/serverless": "^0.9.0",
