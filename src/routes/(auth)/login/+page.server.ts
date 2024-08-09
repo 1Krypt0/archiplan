@@ -1,6 +1,6 @@
-import { z } from 'zod';
 import { setError, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
+import { createSelectSchema } from 'drizzle-zod';
 
 import { lucia } from '$lib/server/auth';
 import { verify } from '@node-rs/argon2';
@@ -12,20 +12,19 @@ import { eq } from 'drizzle-orm';
 import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
 
-const formSchema = z.object({
-	email: z.string().email(),
-	password: z.string()
-});
+const loginSchema = createSelectSchema(userTable, {
+	email: (schema) => schema.email.email()
+}).pick({ email: true, password: true });
 
 export const load: PageServerLoad = async () => {
-	const form = await superValidate(zod(formSchema));
+	const form = await superValidate(zod(loginSchema));
 
 	return { form };
 };
 
 export const actions: Actions = {
 	default: async ({ request, cookies }) => {
-		const form = await superValidate(request, zod(formSchema));
+		const form = await superValidate(request, zod(loginSchema));
 
 		if (!form.valid) {
 			return fail(400, { form, invalid: true, message: 'Invalid Login data' });
