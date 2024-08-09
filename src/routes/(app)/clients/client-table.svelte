@@ -11,7 +11,7 @@
 	export let form;
 
 	const table = createTable(readable(clients), {
-		page: addPagination()
+    page: addPagination({initialPageSize: 5})
 	});
 
 	const columns = table.createColumns([
