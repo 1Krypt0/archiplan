@@ -7,14 +7,16 @@ import { createInsertSchema } from 'drizzle-zod';
 
 import db from '../../../database/drizzle';
 import { eq } from 'drizzle-orm';
-import { userTable } from '../../../database/schema';
+import { userDepartment, userTable } from '../../../database/schema';
 
 import { lucia } from '$lib/server/auth';
 import { generateIdFromEntropySize } from 'lucia';
 import { hash } from '@node-rs/argon2';
+import { z } from 'zod';
 
 const registerSchema = createInsertSchema(userTable, {
-	email: (schema) => schema.email.email()
+	email: (schema) => schema.email.email(),
+	department: z.enum(userDepartment)
 }).pick({
 	name: true,
 	email: true,
@@ -24,9 +26,11 @@ const registerSchema = createInsertSchema(userTable, {
 
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod(registerSchema));
+	const departments = userDepartment;
 
 	return {
-		form
+		form,
+		departments
 	};
 };
 

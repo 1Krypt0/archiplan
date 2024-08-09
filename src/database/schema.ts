@@ -1,5 +1,3 @@
-import { DrizzleSQLiteAdapter } from '@lucia-auth/adapter-drizzle';
-import db from './drizzle';
 import { sqliteTable, text, integer, real, primaryKey } from 'drizzle-orm/sqlite-core';
 
 // // TODO: Redefine and maybe simplify with father
@@ -16,13 +14,22 @@ import { sqliteTable, text, integer, real, primaryKey } from 'drizzle-orm/sqlite
 // 	'project_development',
 // 	'final_works'
 // ]);
+
+export const userDepartment: [string, ...string[]] = [
+	'Architecture',
+	'Civil Engineering',
+	'Drawing',
+	'Interior Design',
+	'Technician'
+];
+
 export const userTable = sqliteTable('user', {
 	id: text('id').primaryKey().unique(),
 	name: text('name').notNull(),
 	email: text('email').notNull(),
 	password: text('password').notNull(),
 	department: text('department', {
-		enum: ['architecture', 'civil_engineer', 'drawing', 'interior_design', 'technician']
+		enum: userDepartment
 	}),
 	isAdmin: integer('is_admin', { mode: 'boolean' }).default(false).notNull()
 });
@@ -143,5 +150,3 @@ export const timeTransaction = sqliteTable('time_transaction', {
 		.notNull()
 		.references(() => userTable.id)
 });
-
-export const adapter = new DrizzleSQLiteAdapter(db, sessionTable, userTable);

@@ -4,21 +4,10 @@
 	import * as Select from '$lib/components/ui/select/index';
 	import { Input } from '$lib/components/ui/input/index';
 
-	import { superForm } from 'sveltekit-superforms';
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
-
-	const departments = [
-		{
-			value: 'architecture',
-			label: 'Architecture'
-		},
-		{
-			value: 'interior_design',
-			label: 'Interior Design'
-		}
-	];
 
 	const form = superForm(data.form, {
 		taintedMessage:
@@ -36,22 +25,13 @@
 		<Card.Content>
 			<form method="post" use:enhance>
 				<div class="mt-4 grid gap-4">
-					<div class="grid grid-cols-2 gap-4">
-						<Form.Field {form} name="firstName" class="grid gap-2">
-							<Form.Control let:attrs>
-								<Form.Label>First Name</Form.Label>
-								<Input {...attrs} placeholder="John" required bind:value={$formData.firstName} />
-							</Form.Control>
-							<Form.FieldErrors />
-						</Form.Field>
-						<Form.Field {form} name="lastName" class="grid gap-2">
-							<Form.Control let:attrs>
-								<Form.Label>Last Name</Form.Label>
-								<Input {...attrs} placeholder="Doe" required bind:value={$formData.lastName} />
-							</Form.Control>
-							<Form.FieldErrors />
-						</Form.Field>
-					</div>
+					<Form.Field {form} name="name" class="grid gap-2">
+						<Form.Control let:attrs>
+							<Form.Label>First Name</Form.Label>
+							<Input {...attrs} placeholder="John" required bind:value={$formData.name} />
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 					<Form.Field {form} name="email" class="grid gap-2">
 						<Form.Control let:attrs>
 							<Form.Label>Email</Form.Label>
@@ -83,19 +63,19 @@
 							<Form.Label>Department</Form.Label>
 							<Select.Root
 								onSelectedChange={(v) => {
-									v && ($formData.department = { label: v.label, value: v.value });
+									v && ($formData.department = v.value);
 								}}
 							>
 								<Select.Trigger {...attrs}>
 									<Select.Value placeholder="Choose your Department"></Select.Value>
 								</Select.Trigger>
 								<Select.Content>
-									{#each departments as department}
-										<Select.Item value={department.value} label={department.label} />
+									{#each data.departments as department}
+										<Select.Item value={department} label={department} />
 									{/each}
 								</Select.Content>
 							</Select.Root>
-							<input hidden bind:value={$formData.department.value} name={attrs.name} />
+							<input hidden bind:value={$formData.department} name={attrs.name} />
 						</Form.Control>
 					</Form.Field>
 					<Form.Button>Create an Account</Form.Button>
@@ -104,6 +84,7 @@
 					Already have an account?
 					<a href="/login" class="underline"> Sign in </a>
 				</div>
+				<SuperDebug data={$formData} />
 			</form>
 		</Card.Content>
 	</Card.Root>
