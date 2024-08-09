@@ -1,20 +1,5 @@
 import { sqliteTable, text, integer, real, primaryKey } from 'drizzle-orm/sqlite-core';
 
-// // TODO: Redefine and maybe simplify with father
-// export const projectStageEnum = pgEnum('project_stage', [
-// 	'contract_signature_tentative_study',
-// 	'tentative_study_presentation',
-// 	'council_delivery',
-// 	'project_approval',
-// 	'contract_signature_licensing',
-// 	'tentative_study_licensing',
-// 	'architectural_project',
-// 	'specialties_project',
-// 	'contract_signature_execution',
-// 	'project_development',
-// 	'final_works'
-// ]);
-
 export const userDepartment: [string, ...string[]] = [
 	'Architecture',
 	'Civil Engineering',
@@ -22,6 +7,32 @@ export const userDepartment: [string, ...string[]] = [
 	'Interior Design',
 	'Technician'
 ];
+
+export const clientType: [string, ...string[]] = ['Customer', 'Business', 'Government'];
+
+export const clientCivilState: [string, ...string[]] = [
+	'Single',
+	'Married',
+	'Divorced',
+	'Separated',
+	'Widowed'
+];
+
+export const projectStage: [string, ...string[]] = [
+	'Contract Signature - Tentative Study',
+	'Tentative Study Presentation',
+	'Council Delivery',
+	'Project Approval',
+	'Contract Signature - Licensing',
+	'Tentative Study - Licensing',
+	'Architectural Project',
+	'Specialties Project',
+	'Contract Signature - Execution',
+	'Project Development',
+	'Final Works'
+];
+
+export const projectCouncilType: [string, ...string[]] = ['Rustic', 'Urban'];
 
 export const userTable = sqliteTable('user', {
 	id: text('id').primaryKey().unique(),
@@ -44,7 +55,7 @@ export const sessionTable = sqliteTable('session', {
 
 export const clientTable = sqliteTable('client', {
 	id: text('id').primaryKey().unique(),
-	type: text('client_type', { enum: ['Customer', 'Business', 'Government'] }).notNull(),
+	type: text('client_type', { enum: clientType }).notNull(),
 	name: text('name').notNull(),
 	address: text('address').notNull(),
 	email: text('email').notNull().unique(),
@@ -53,7 +64,7 @@ export const clientTable = sqliteTable('client', {
 	citizenIdExpirationDate: integer('citizen_id_expiration_date', { mode: 'timestamp' }),
 	taxId: integer('tax_id').notNull().unique(), // NOTE: Check if actually an int in every country (billing is tricky)
 	civilState: text('civil_state', {
-		enum: ['Single', 'Married', 'Divorced', 'Separated', 'Widowed']
+		enum: clientCivilState
 	}),
 	procurerId: text('procurer_id').references(() => procurerTable.id)
 });
@@ -66,23 +77,11 @@ export const projectTable = sqliteTable('project', {
 		.references(() => projectTypeTable.id),
 	expectedHours: integer('expected_hours').notNull(),
 	stage: text('stage', {
-		enum: [
-			'contract_signature_tentative_study',
-			'tentative_study_presentation',
-			'council_delivery',
-			'project_approval',
-			'contract_signature_licensing',
-			'tentative_study_licensing',
-			'architectural_project',
-			'specialties_project',
-			'contract_signature_execution',
-			'project_development',
-			'final_works'
-		]
+		enum: projectStage
 	})
 		.notNull()
 		.default('contract_signature_tentative_study'),
-	councilType: text('council_type', { enum: ['rustic', 'urban'] }).notNull(),
+	councilType: text('council_type', { enum: projectCouncilType }).notNull(),
 	councilArticleNumber: integer('council_article_number'),
 	councilRegistrationNumber: integer('council_registration_number'),
 	conservatory: text('conservatory'),

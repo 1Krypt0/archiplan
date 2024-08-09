@@ -26,9 +26,7 @@ export const load: PageServerLoad = async (event) => {
 
 	const form = await superValidate(zod(createClientSchema));
 
-
 	const clients = await db.select().from(clientTable);
-
 
 	return { clients: clients.reverse(), form };
 };
@@ -49,6 +47,5 @@ export const actions: Actions = {
 			id: clientId,
 			...clientData
 		});
-
 	}
 };

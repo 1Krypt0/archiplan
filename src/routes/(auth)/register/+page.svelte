@@ -4,7 +4,7 @@
 	import * as Select from '$lib/components/ui/select/index';
 	import { Input } from '$lib/components/ui/input/index';
 
-	import SuperDebug, { superForm } from 'sveltekit-superforms';
+	import { superForm } from 'sveltekit-superforms';
 	import type { PageServerData } from './$types';
 
 	export let data: PageServerData;
@@ -27,7 +27,7 @@
 				<div class="mt-4 grid gap-4">
 					<Form.Field {form} name="name" class="grid gap-2">
 						<Form.Control let:attrs>
-							<Form.Label>First Name</Form.Label>
+							<Form.Label>Name</Form.Label>
 							<Input {...attrs} placeholder="John" required bind:value={$formData.name} />
 						</Form.Control>
 						<Form.FieldErrors />
@@ -84,7 +84,6 @@
 					Already have an account?
 					<a href="/login" class="underline"> Sign in </a>
 				</div>
-				<SuperDebug data={$formData} />
 			</form>
 		</Card.Content>
 	</Card.Root>
