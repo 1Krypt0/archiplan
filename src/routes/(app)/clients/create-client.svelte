@@ -9,6 +9,7 @@
 	import * as Select from '$lib/components/ui/select';
 	import { superForm } from 'sveltekit-superforms';
 	import MonthYearCalendar from './month-year-calendar.svelte';
+	import { clientCivilState, clientType } from '../../../database/schema';
 
 	import {
 		DateFormatter,
@@ -21,8 +22,8 @@
 
 	export let formSchema;
 
-	const customerTypes = ['Customer', 'Business', 'Government'];
-	const civilStates = ['Single', 'Married', 'Divorced', 'Separated', 'Widowed'];
+	const customerTypes = clientType;
+	const civilStates = clientCivilState;
 
 	const df = new DateFormatter('en-US', {
 		dateStyle: 'long'

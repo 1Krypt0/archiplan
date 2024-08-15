@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer, real, primaryKey } from 'drizzle-orm/sqlite-core';
+import { relations, type InferSelectModel } from 'drizzle-orm';
 
 export const userDepartment: [string, ...string[]] = [
 	'Architecture',
@@ -69,6 +70,12 @@ export const clientTable = sqliteTable('client', {
 	procurerId: text('procurer_id').references(() => procurerTable.id)
 });
 
+export const clientRelations = relations(clientTable, ({ one }) => ({
+	procurer: one(procurerTable)
+}));
+
+export type SelectClient = InferSelectModel<typeof clientTable>;
+
 export const projectTable = sqliteTable('project', {
 	id: text('id').primaryKey().unique(),
 	address: text('address').notNull(),
@@ -125,6 +132,8 @@ export const procurerTable = sqliteTable('procurer', {
 	citizenID: integer('citizen_id').notNull().unique(),
 	citizenIDExpirationDate: integer('citizes_expiration_date', { mode: 'timestamp' }).notNull()
 });
+
+export type SelectProcurer = InferSelectModel<typeof procurerTable>;
 
 export const moneyTransaction = sqliteTable('money_transaction', {
 	id: text('id').primaryKey().unique(),

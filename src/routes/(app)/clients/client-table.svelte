@@ -6,44 +6,45 @@
 	import { Button } from '$lib/components/ui/button';
 	import ClientTableActions from './client-table-actions.svelte';
 	import CreateClient from './create-client.svelte';
+	import { type SelectClient, type SelectProcurer } from '../../../database/schema';
 
-	export let clients;
+	export let clients: { client: SelectClient; procurer: SelectProcurer }[];
 	export let form;
 
 	const table = createTable(readable(clients), {
-		page: addPagination()
+		page: addPagination({ initialPageSize: 5 })
 	});
 
 	const columns = table.createColumns([
 		table.column({
-			accessor: 'type',
+			accessor: ({ client }) => client.type,
 			header: 'Client Type'
 		}),
 		table.column({
-			accessor: 'name',
+			accessor: ({ client }) => client.name,
 			header: 'Name'
 		}),
 		table.column({
-			accessor: 'email',
+			accessor: ({ client }) => client.email,
 			header: 'Email'
 		}),
 		table.column({
-			accessor: 'address',
+			accessor: ({ client }) => client.address,
 			header: 'Address'
 		}),
 		table.column({
-			accessor: 'phoneNumber',
+			accessor: ({ client }) => client.phoneNumber,
 			header: 'Phone Number'
 		}),
 		table.column({
-			accessor: 'procurerName',
+			accessor: ({ procurer }) => procurer?.name,
 			header: 'Procurer',
 			cell: ({ value }) => {
 				return value ?? 'None';
 			}
 		}),
 		table.column({
-			accessor: ({ id }) => id,
+			accessor: ({ client }) => client.id,
 			header: '',
 			cell: ({ value }) => {
 				return createRender(ClientTableActions, { id: value });

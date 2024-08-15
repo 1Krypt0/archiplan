@@ -5,18 +5,14 @@ import { superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { generateIdFromEntropySize } from 'lucia';
 import db from '../../../database/drizzle';
-import { clientTable } from '../../../database/schema';
+import { clientCivilState, clientTable, clientType, procurerTable } from '../../../database/schema';
+import { createInsertSchema } from 'drizzle-zod';
+import { eq } from 'drizzle-orm';
 
-const createClientSchema = z.object({
-	type: z.enum(['Customer', 'Business', 'Government']),
-	name: z.string().min(1),
-	address: z.string().min(1),
-	email: z.string().email(),
-	phoneNumber: z.string().min(1),
-	taxId: z.string().min(1),
-	citizenId: z.string().min(1).optional(),
-	citizenIdExpirationDate: z.date().optional(),
-	civilState: z.enum(['Single', 'Married', 'Divorced', 'Separated', 'Widowed']).optional()
+const clientSchema = createInsertSchema(clientTable, {
+	email: (schema) => schema.email.email(),
+	type: z.enum(clientType),
+	civilState: z.enum(clientCivilState)
 });
 
 export const load: PageServerLoad = async (event) => {
@@ -24,16 +20,19 @@ export const load: PageServerLoad = async (event) => {
 		redirect(302, '/login');
 	}
 
-	const form = await superValidate(zod(createClientSchema));
+	const form = await superValidate(zod(clientSchema));
 
-	const clients = await db.select().from(clientTable);
+	const clients = await db
+		.select()
+		.from(clientTable)
+		.leftJoin(procurerTable, eq(clientTable.procurerId, procurerTable.id));
 
 	return { clients: clients.reverse(), form };
 };
 
 export const actions: Actions = {
 	default: async ({ request }) => {
-		const form = await superValidate(request, zod(createClientSchema));
+		const form = await superValidate(request, zod(clientSchema));
 
 		if (!form.valid) {
 			return fail(400, { form });
@@ -44,8 +43,8 @@ export const actions: Actions = {
 		const clientId = generateIdFromEntropySize(20);
 
 		await db.insert(clientTable).values({
-			id: clientId,
-			...clientData
+			...clientData,
+			id: clientId
 		});
 	}
 };
