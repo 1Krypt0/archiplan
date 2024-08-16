@@ -8,7 +8,7 @@
 	import CreateClient from './create-client.svelte';
 	import { type SelectClient, type SelectProcurer } from '../../../database/schema';
 
-	export let clients: { client: SelectClient; procurer: SelectProcurer }[];
+	export let clients: { client: SelectClient; procurer: SelectProcurer | null }[];
 	export let form;
 
 	const table = createTable(readable(clients), {
@@ -100,7 +100,7 @@
 			on:click={() => ($pageIndex = $pageIndex - 1)}
 			disabled={!$hasPreviousPage}>Previous</Button
 		>
-		<p>Page {$pageIndex + 1} of {$pageCount}</p>
+		<p>Page {$pageIndex + 1} of {$pageCount == 0 ? 1 : $pageCount}</p>
 		<Button
 			variant="default"
 			size="sm"

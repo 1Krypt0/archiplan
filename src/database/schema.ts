@@ -100,6 +100,8 @@ export const projectTable = sqliteTable('project', {
 		.notNull()
 });
 
+export type SelectProject = InferSelectModel<typeof projectTable>;
+
 export const projectTypeTable = sqliteTable('project_type', {
 	id: text('id').primaryKey().unique(),
 	type: text('type').notNull().unique()
