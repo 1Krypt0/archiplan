@@ -29,7 +29,7 @@ export const Route = createFileRoute("/(auth)/_auth/login")({
 });
 
 function RouteComponent() {
-  const navigate = useNavigate({ from: "/" });
+  const navigate = useNavigate({ from: "/login" });
 
   const loginSchema = z.object({
     email: z.email(),
@@ -159,12 +159,6 @@ function RouteComponent() {
                     <FormItem className="grid gap-2">
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        {/* <Link */}
-                        {/*   href="/forgot-password" */}
-                        {/*   className="ml-auto text-sm underline-offset-4 underline" */}
-                        {/* > */}
-                        {/*   Forgot your password? */}
-                        {/* </Link> */}
                       </div>
                       <FormControl>
                         <Input
@@ -226,7 +220,7 @@ function RouteComponent() {
           By entering the platform, you are agreeing with our{" "}
           <a
             target="_blank"
-            href="https://askjarvas.com/terms-of-service"
+            href="#"
             className="hover:text-primary underline underline-offset-4"
           >
             Terms of Service
@@ -234,7 +228,7 @@ function RouteComponent() {
           and our{" "}
           <a
             target="_blank"
-            href="https://askjarvas.com/privacy-policy"
+            href="#"
             className="hover:text-primary underline underline-offset-4"
           >
             Privacy Policy

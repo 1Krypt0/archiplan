@@ -1,4 +1,3 @@
-// src/routes/__root.tsx
 /// <reference types="vite/client" />
 import type { ReactNode } from "react";
 import {
@@ -9,6 +8,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "@/styles/app.css?url";
+import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -50,6 +50,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
       </head>
       <body>
         {children}
+        <Toaster />
         <Scripts />
       </body>
     </html>
