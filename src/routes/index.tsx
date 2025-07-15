@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { auth } from "@/lib/auth";
 import { getWebRequest } from "@tanstack/react-start/server";
@@ -24,6 +24,12 @@ export const Route = createFileRoute("/")({
 
 function Home() {
   const data: any[] = [];
+  const session = Route.useLoaderData();
+  const navigate = useNavigate({ from: "/" });
+
+  if (!session) {
+    return navigate({ to: "/login" });
+  }
 
   return (
     <SidebarProvider
@@ -34,7 +40,7 @@ function Home() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar variant="inset" user={session.user} />
       <SidebarInset>
         <SiteHeader />
         <div className="flex flex-1 flex-col">
