@@ -1,14 +1,12 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
+import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+
 import { createServerFn } from "@tanstack/react-start";
 import { auth } from "@/lib/auth";
 import { getWebRequest } from "@tanstack/react-start/server";
 import { authMiddleware } from "@/lib/middleware";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
-import { SiteHeader } from "@/components/site-header";
-import { SectionCards } from "@/components/section-cards";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
 
 export const getCurrentUser = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
@@ -17,13 +15,12 @@ export const getCurrentUser = createServerFn({ method: "GET" })
     return auth.api.getSession(request);
   });
 
-export const Route = createFileRoute("/")({
-  component: Home,
+export const Route = createFileRoute("/_app")({
+  component: RouteComponent,
   loader: () => getCurrentUser(),
 });
 
-function Home() {
-  const data: any[] = [];
+function RouteComponent() {
   const session = Route.useLoaderData();
   const navigate = useNavigate({ from: "/" });
 
@@ -45,12 +42,8 @@ function Home() {
         <SiteHeader />
         <div className="flex flex-1 flex-col">
           <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
-              <DataTable data={data} />
+            <div className="flex flex-col h-full  gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
+              <Outlet />
             </div>
           </div>
         </div>

@@ -12,7 +12,9 @@ import { createFileRoute } from '@tanstack/react-router'
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app.index'
+import { Route as AppClientsRouteImport } from './routes/_app.clients'
 import { Route as authAuthRouteImport } from './routes/(auth)/_auth'
 import { Route as authAuthRegisterRouteImport } from './routes/(auth)/_auth.register'
 import { Route as authAuthLoginRouteImport } from './routes/(auth)/_auth.login'
@@ -25,10 +27,19 @@ const authRoute = authRouteImport.update({
   id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientsRoute = AppClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AppRoute,
 } as any)
 const authAuthRoute = authAuthRouteImport.update({
   id: '/_auth',
@@ -51,39 +62,45 @@ const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof authAuthRouteWithChildren
+  '/': typeof AppIndexRoute
+  '/clients': typeof AppClientsRoute
   '/login': typeof authAuthLoginRoute
   '/register': typeof authAuthRegisterRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof authAuthRouteWithChildren
+  '/': typeof AppIndexRoute
+  '/clients': typeof AppClientsRoute
   '/login': typeof authAuthLoginRoute
   '/register': typeof authAuthRegisterRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
   '/(auth)': typeof authRouteWithChildren
   '/(auth)/_auth': typeof authAuthRouteWithChildren
+  '/_app/clients': typeof AppClientsRoute
+  '/_app/': typeof AppIndexRoute
   '/(auth)/_auth/login': typeof authAuthLoginRoute
   '/(auth)/_auth/register': typeof authAuthRegisterRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register'
+  fullPaths: '/' | '/clients' | '/login' | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
+  to: '/' | '/clients' | '/login' | '/register'
   id:
     | '__root__'
-    | '/'
+    | '/_app'
     | '/(auth)'
     | '/(auth)/_auth'
+    | '/_app/clients'
+    | '/_app/'
     | '/(auth)/_auth/login'
     | '/(auth)/_auth/register'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   authRoute: typeof authRouteWithChildren
 }
 export interface FileServerRoutesByFullPath {
@@ -117,12 +134,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/clients': {
+      id: '/_app/clients'
+      path: '/clients'
+      fullPath: '/clients'
+      preLoaderRoute: typeof AppClientsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/(auth)/_auth': {
       id: '/(auth)/_auth'
@@ -159,6 +190,18 @@ declare module '@tanstack/react-start/server' {
   }
 }
 
+interface AppRouteChildren {
+  AppClientsRoute: typeof AppClientsRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppClientsRoute: AppClientsRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 interface authAuthRouteChildren {
   authAuthLoginRoute: typeof authAuthLoginRoute
   authAuthRegisterRoute: typeof authAuthRegisterRoute
@@ -184,7 +227,7 @@ const authRouteChildren: authRouteChildren = {
 const authRouteWithChildren = authRoute._addFileChildren(authRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   authRoute: authRouteWithChildren,
 }
 export const routeTree = rootRouteImport
